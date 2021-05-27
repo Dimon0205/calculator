@@ -31,6 +31,7 @@ press_axes_list = {
 }
 
 press_axes = {}
+
 for k, v in press_axes_list.items():
     v = int(input(k) or '0')
     if v > 0:
@@ -39,6 +40,7 @@ for k, v in press_axes_list.items():
         print(k, v, p)
         if v != 0:
             press_axes[k] = [v, p]
+            out_result.update(press_axes)
 total_press_axes = [sum(i) for i in zip(*press_axes.values())]
 
 # print(press_axes)
@@ -50,22 +52,21 @@ for total in total_press_axes:
         pressresult = Decimal(weight) * Decimal(press_coef[0])
     if press_axes_list[2::] != 0:
         if pressresult == 0:
-            pressresult = [Decimal(weight) * Decimal(press_coef[1])]
-        # if pressresult > total:
-        #     pressresult = [Decimal(weight) * Decimal(press_coef[2])]
-        # if pressresult > total:
-        #     pressresult = [Decimal(weight) * Decimal(press_coef[3])]
-        # if pressresult > total:
-        #     pressresult = [Decimal(weight) * Decimal(press_coef[4])]
+            pressresult = Decimal(weight) * Decimal(press_coef[1])
+        if pressresult > total:
+            pressresult = Decimal(weight) * Decimal(press_coef[2])
+        if pressresult > total:
+            pressresult = Decimal(weight) * Decimal(press_coef[3])
+        if pressresult > total:
+            pressresult = Decimal(weight) * Decimal(press_coef[4])
 
 # pressresult = int(pressresult)
 
-out_result.update({'Вес поезда: ': int(weight),
-                   'Количество осей: ': axes,
-                   'Требуемое нажатие: ': pressresult,
-                   'Требуется ручных тормозных осей:': parking_axes,
-                   press_axes.keys(): press_axes.values(),
-                   'Итого: ': total_press_axes
+out_result.update({'Вес поезда': weight,
+                   'Количество осей': axes,
+                   'Требуемое нажатие': math.ceil(pressresult),
+                   'Требуется ручных тормозных осей': (math.ceil(parking_axes)),
+                   'Итого': total_press_axes
                    })
 print(out_result)
 # print('Вес поезда: ' + str(int(weight)), 'Требуемое тормозное нажатие: ' + str(math.ceil(pressresult)))
