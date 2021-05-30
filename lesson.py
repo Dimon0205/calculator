@@ -1,25 +1,19 @@
-# required -- required data
-# weight -- train weight
-# axes--  number of axes
-# press_coef -- coefficient of calculation of the required brake pressure
-# pressresult -- required single brake press
-# parking_axes -- manual brake axles required
-# parking_axes_coef -- coefficient of calculation of required hand brakes in axles
-# press_axes -- actual calculated click on the axis
-# press_axes_coef -- coefficient for calculating the actual click
+# Калькулятор расчёта справки об обеспечении поезда тормозами и исправном их действии
 
-# press = weight * press_coef[0]
-# print(press)
 import math
 from decimal import Decimal, getcontext
 
 getcontext().prec = 5
 
-out_result = {}
-axes = int(input('Количество осей: ') or '0')
-press_coef = [0.55, 0.33, 0.32, 0.31, 0.30]
+out_result = {}  # Словарь для сбора всех расчётов
+axes = int(input('Количество осей: '))
+press_coef = [.55, .33, .32, .31, .3]
+press_coef_hint = ''
 weight = float(input('Вес поезда: ') or '0')
-parking_axes = weight * 0.006
+parking_axes = weight * .006  # Расчитываем требуемое количество ручных тормозных осей
+parking_axes = math.ceil(parking_axes)
+while parking_axes % 4 != 0:  # Округляем значение
+    parking_axes += 1  # до кратного 4
 
 press_axes_list = {
     3.5: 0,
@@ -28,46 +22,46 @@ press_axes_list = {
     7.5: 0,
     8.0: 0,
     8.5: 0
-}
+}  # Коеффициент тормозного нажатия в пересчёте на количество осей
 
-press_axes = {}
+press_axes = {}  # Сюда переносим ключ: значение из press_axes_list если значение != 0
 
+# Здесь расчитваем тормозное нажатие для каждой пары и заносим и заносим все данные в press_axes
 for k, v in press_axes_list.items():
-    v = int(input(k) or '0')
+    v = (int(input(k) or '0'))
     if v > 0:
         p = float(v) * k
         p = int(p)
         print(k, v, p)
         if v != 0:
-            press_axes[k] = [v, p]
-            out_result.update(press_axes)
+            press_axes[str(k)] = v, p
+
+# Подсчитываем итоговые данные количества тормозных осей и фактического тормозного нажатия
 total_press_axes = [sum(i) for i in zip(*press_axes.values())]
 
-# print(press_axes)
-# print('Итого: ' + str(total_press_axes))
-pressresult = 0
-press_axes_list = list(press_axes_list)
-for total in total_press_axes:
-    if press_axes_list[2::] == 0:
-        pressresult = Decimal(weight) * Decimal(press_coef[0])
-    if press_axes_list[2::] != 0:
-        if pressresult == 0:
-            pressresult = Decimal(weight) * Decimal(press_coef[1])
+pressresult = 0  # Требуемое тормозное нажатие расчитывается в условиях ниже
+for total in total_press_axes[::]:
+    if '7.0' or '7.5' or '8.0' or '8.5' in press_axes:
+        pressresult = (weight * press_coef[1])
         if pressresult > total:
-            pressresult = Decimal(weight) * Decimal(press_coef[2])
-        if pressresult > total:
-            pressresult = Decimal(weight) * Decimal(press_coef[3])
-        if pressresult > total:
-            pressresult = Decimal(weight) * Decimal(press_coef[4])
+            pressresult = (weight * press_coef[2])
+            press_coef_hint = 'Расчёт по ' + str(press_coef[2]) + ' тс'
+        elif pressresult > total:
+            pressresult = (weight * press_coef[3])
+            press_coef_hint = 'Расчёт по ' + str(press_coef[3]) + ' тс'
+        elif pressresult > total:
+            pressresult = (weight * press_coef[4])
+            press_coef_hint = 'Расчёт по ' + str(press_coef[4]) + ' тс'
+    else:  # Если в словарь не попали перечисленные ключи, то выполняем расчёт ниже
+        pressresult = (weight * press_coef[0])
 
-# pressresult = int(pressresult)
-
-out_result.update({'Вес поезда': weight,
-                   'Количество осей': axes,
-                   'Требуемое нажатие': math.ceil(pressresult),
-                   'Требуется ручных тормозных осей': (math.ceil(parking_axes)),
-                   'Итого': total_press_axes
+# Заполняем словарь  итоговыми расчётами
+out_result.update({1: ('Вес поезда:', int(weight)),
+                   2: ('Количество осей:', axes),
+                   3: ('Требуемое нажатие:', math.ceil(pressresult), press_coef_hint),
+                   4: ('Требуется ручных тормозных осей:', parking_axes),
+                   5: ('Фактическое нажатие:', press_axes),
+                   6: ('Итого:', total_press_axes)
                    })
+
 print(out_result)
-# print('Вес поезда: ' + str(int(weight)), 'Требуемое тормозное нажатие: ' + str(math.ceil(pressresult)))
-# print('Требуется ручных тормозов: ' + str(math.ceil(parking_axes)), 'Всего осей: ' + str(axes))
