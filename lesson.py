@@ -1,7 +1,5 @@
 # Калькулятор расчёта справки об обеспечении поезда тормозами и исправном их действии
 
-
-
 import math
 from decimal import Decimal, getcontext
 
