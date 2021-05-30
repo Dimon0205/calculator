@@ -2,14 +2,29 @@
 
 import math
 from decimal import Decimal, getcontext
-
 getcontext().prec = 5
 
 out_result = {}  # Словарь для сбора всех расчётов
-axes = int(input('Количество осей: '))
+
+while True:
+    try:
+        axes = int(input('Количество осей: ') or 0)
+        if axes % 4 or axes <= 0 :
+            raise  Exception()
+        break
+    except Exception as e:
+        print('Количество осей должно быть кратно 4 и не иметь отрицательного числа!')
+while True:
+    try:
+        weight = float(input('Вес поезда: ') or '0')
+        if weight > 9000 or weight < 0:
+            raise Exception()
+        break
+    except Exception:
+        print('Вес не должен быть меньше 0 и болше 9000 тонн!')
+
 press_coef = [.55, .33, .32, .31, .3]
 press_coef_hint = ''
-weight = float(input('Вес поезда: ') or '0')
 parking_axes = weight * .006  # Расчитываем требуемое количество ручных тормозных осей
 parking_axes = math.ceil(parking_axes)
 while parking_axes % 4 != 0:  # Округляем значение
@@ -41,19 +56,22 @@ total_press_axes = [sum(i) for i in zip(*press_axes.values())]
 
 pressresult = 0  # Требуемое тормозное нажатие расчитывается в условиях ниже
 for total in total_press_axes[::]:
-    if '7.0' or '7.5' or '8.0' or '8.5' in press_axes:
-        pressresult = (weight * press_coef[1])
-        if pressresult > total:
-            pressresult = (weight * press_coef[2])
+    if not press_axes.keys() & {'7.0', '7.5', '8.0', '8.5'}:
+        getcontext().prec = 5
+        pressresult = Decimal(weight) * Decimal(press_coef[0])
+    else:  # Если в словарь не попали перечисленные ключи, то выполняем расчёт ниже
+        if pressresult <= total:
+            pressresult = Decimal(weight) * Decimal(press_coef[1])
+            press_coef_hint = 'Расчёт по ' + str(press_coef[1]) + ' тс'
+        elif pressresult > total:
+            pressresult = Decimal(weight) * Decimal(press_coef[2])
             press_coef_hint = 'Расчёт по ' + str(press_coef[2]) + ' тс'
         elif pressresult > total:
-            pressresult = (weight * press_coef[3])
+            pressresult = Decimal(weight) * Decimal(press_coef[3])
             press_coef_hint = 'Расчёт по ' + str(press_coef[3]) + ' тс'
         elif pressresult > total:
-            pressresult = (weight * press_coef[4])
+            pressresult = Decimal(weight) * Decimal(press_coef[4])
             press_coef_hint = 'Расчёт по ' + str(press_coef[4]) + ' тс'
-    else:  # Если в словарь не попали перечисленные ключи, то выполняем расчёт ниже
-        pressresult = (weight * press_coef[0])
 
 # Заполняем словарь  итоговыми расчётами
 out_result.update({1: ('Вес поезда:', int(weight)),
