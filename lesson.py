@@ -72,15 +72,6 @@ for total in total_press_axes[::]:
             pressresult = Decimal(weight) * Decimal(press_coef[4])
             press_coef_hint = 'Расчёт по ' + str(press_coef[4]) + ' тс'
 
-# Заполняем словарь  итоговыми расчётами
-# out_result = {
-#                 "Количество осей:": axes,
-#                 "Требуемое нажатие:": math.ceil(pressresult) press_coef_hint,
-#                 "Требуется ручных тормозных осей:": parking_axes,
-#                 "Фактическое нажатие:": press_axes,
-#                 "Итого:": total_press_axes
-#
-# }
 out_result = {}
 
 filname = 'out_result.json'
