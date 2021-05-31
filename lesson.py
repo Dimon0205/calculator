@@ -1,18 +1,18 @@
 # Калькулятор расчёта справки об обеспечении поезда тормозами и исправном их действии
 
+import json
 import math
 from decimal import Decimal, getcontext
-getcontext().prec = 5
 
-out_result = {}  # Словарь для сбора всех расчётов
+getcontext().prec = 5
 
 while True:
     try:
         axes = int(input('Количество осей: ') or 0)
-        if axes % 4 or axes <= 0 :
-            raise  Exception()
+        if axes % 4 or axes <= 0:
+            raise Exception()
         break
-    except Exception as e:
+    except Exception:
         print('Количество осей должно быть кратно 4 и не иметь отрицательного числа!')
 while True:
     try:
@@ -27,8 +27,8 @@ press_coef = [.55, .33, .32, .31, .3]
 press_coef_hint = ''
 parking_axes = weight * .006  # Расчитываем требуемое количество ручных тормозных осей
 parking_axes = math.ceil(parking_axes)
-while parking_axes % 4 != 0:  # Округляем значение
-    parking_axes += 1  # до кратного 4
+if parking_axes % 4:  # Округляем значение
+    parking_axes += 4 - parking_axes % 4  # до кратного 4
 
 press_axes_list = {
     3.5: 0,
@@ -49,15 +49,14 @@ for k, v in press_axes_list.items():
         p = int(p)
         print(k, v, p)
         if v != 0:
-            press_axes[str(k)] = v, p
+            press_axes[k] = v, p
 
 # Подсчитываем итоговые данные количества тормозных осей и фактического тормозного нажатия
 total_press_axes = [sum(i) for i in zip(*press_axes.values())]
 
 pressresult = 0  # Требуемое тормозное нажатие расчитывается в условиях ниже
 for total in total_press_axes[::]:
-    if not press_axes.keys() & {'7.0', '7.5', '8.0', '8.5'}:
-        getcontext().prec = 5
+    if not press_axes.keys() & {7.0, 7.5, 8.0, 8.5}:
         pressresult = Decimal(weight) * Decimal(press_coef[0])
     else:  # Если в словарь не попали перечисленные ключи, то выполняем расчёт ниже
         if pressresult <= total:
@@ -74,12 +73,25 @@ for total in total_press_axes[::]:
             press_coef_hint = 'Расчёт по ' + str(press_coef[4]) + ' тс'
 
 # Заполняем словарь  итоговыми расчётами
-out_result.update({1: ('Вес поезда:', int(weight)),
-                   2: ('Количество осей:', axes),
-                   3: ('Требуемое нажатие:', math.ceil(pressresult), press_coef_hint),
-                   4: ('Требуется ручных тормозных осей:', parking_axes),
-                   5: ('Фактическое нажатие:', press_axes),
-                   6: ('Итого:', total_press_axes)
-                   })
+# out_result = {
+#                 "Количество осей:": axes,
+#                 "Требуемое нажатие:": math.ceil(pressresult) press_coef_hint,
+#                 "Требуется ручных тормозных осей:": parking_axes,
+#                 "Фактическое нажатие:": press_axes,
+#                 "Итого:": total_press_axes
+#
+# }
+out_result = {}
 
-print(out_result)
+filname = 'out_result.json'
+with open(filname, 'w', encoding="utf-8") as out:
+    json.dump([
+        'Вес поезда:', weight,
+        'Количество осей:', axes,
+        'Требуемое нажатие:', math.ceil(pressresult), press_coef_hint,
+        'Требуется ручных тормозных осей:', parking_axes,
+        'Фактическое нажатие:', press_axes,
+        'Итого:', total_press_axes
+    ], out, ensure_ascii=False, )
+
+
