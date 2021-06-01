@@ -30,11 +30,10 @@ parking_axes = math.ceil(parking_axes)
 if parking_axes % 4:  # Округляем значение
     parking_axes += 4 - parking_axes % 4  # до кратного 4
 
-
 press_axes = []  # Сюда переносим ключ: значение из press_axes_list если значение != 0
 press_axes_list = [3.5, 4.5, 7.0, 7.5, 8.0, 8.5]  # Коеффициент тормозного нажатия в пересчёте на количество осей
 total_press_axes = []
-r=[]
+r = []
 for c in press_axes_list[::]:
     d = int(input([c]) or 0)
     if d > 0:
@@ -46,16 +45,16 @@ for c in press_axes_list[::]:
 # Подсчитываем итоговые данные количества тормозных осей и фактического тормозного нажатия
 total_press_axes = ([sum(i) for i in zip(*r[::])])
 
-pressresult = 0  # Требуемое тормозное нажатие расчитывается в условиях ниже
-for i in press_axes:
-    if any(7.0 not in i for i in press_axes[::]):
+# Требуемое тормозное нажатие расчитывается в условиях ниже
+n = len(press_axes)
+for i in range(n):
+    if all(c not in [7.0, 7.5, 8.0, 8.5] for c in press_axes[i]):
         pressresult = Decimal(weight) * Decimal(press_coef[0])
     else:
-        for total in total_press_axes[1]:
-            if pressresult <= total:
-                pressresult = Decimal(weight) * Decimal(press_coef[1])
-                press_coef_hint = 'Расчёт по ' + str(press_coef[1]) + ' тс'
-            elif pressresult > total:
+        for total in total_press_axes[1:]:
+            pressresult = Decimal(weight) * Decimal(press_coef[1])
+            press_coef_hint = 'Расчёт по ' + str(press_coef[1]) + ' тс'
+            if pressresult > total:
                 pressresult = Decimal(weight) * Decimal(press_coef[2])
                 press_coef_hint = 'Расчёт по ' + str(press_coef[2]) + ' тс'
             elif pressresult > total:
@@ -65,18 +64,19 @@ for i in press_axes:
                 pressresult = Decimal(weight) * Decimal(press_coef[4])
                 press_coef_hint = 'Расчёт по ' + str(press_coef[4]) + ' тс'
 
-
 out_result = {}
 
 filname = 'out_result.json'
 with open(filname, 'w', encoding="utf-8") as out:
-    json.dump([
-        'Вес поезда:', weight,
-        'Количество осей:', axes,
-        'Требуемое нажатие:', math.ceil(pressresult), press_coef_hint,
-        'Требуется ручных тормозных осей:', parking_axes,
-        'Фактическое нажатие:', press_axes,
-        'Итого:', total_press_axes
-    ], out, ensure_ascii=False, )
+    json.dump(
 
+        [
+            ['Вес поезда:', weight],
+            ['Количество осей:', axes],
+            ['Требуе мое нажатие:', math.ceil(pressresult), press_coef_hint],
+            ['Требуется ручных тормозных осей:', parking_axes],
+            ['Фактическое нажатие:', press_axes],
+            ['Итого:', total_press_axes]
+        ], out, ensure_ascii=False
 
+    )

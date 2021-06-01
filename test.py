@@ -6,7 +6,7 @@ for c in press_axes_list[::]:
     if d > 0:
         v = float(d) * c
         v = int(v)
-        press_axes.append([c, d, v])
+        press_axes.append([str(c)+' тонн на ось', d, v])
         r.append([d, v])
 total_press_axes=([sum(i) for i in zip(*r[::])])
 print(press_axes)
