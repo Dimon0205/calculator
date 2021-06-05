@@ -1,0 +1,269 @@
+
+# kv_start
+<ItemLabel@Label>:
+    font_size: '15sp'
+    halign: 'left'
+    valign: 'middle'
+    text_size: self.size
+
+<CalcScreen>:
+    rows: 3
+    size_hint: 1, 1
+    auto_dismiss: False
+    title: 'Введите данные'
+
+
+    text_input: text_input
+
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint: 1, 1
+
+        TextInput:
+            id: text_input
+            font_size: '20sp'
+            multiline: False
+            input_type: 'number'
+
+
+
+        Button:
+            size_hint: 1, .5
+            text: 'Закрыть'
+            on_press:
+                root.manager.current = root.manager.previous()
+
+<Container>:
+    rows: 5
+
+    weight: weight
+    parking_axes: parking_axes
+
+
+
+    GridLayout:
+        canvas:
+            Color:
+                rgb: 68/255.0, 164/255.0, 201/255.0
+            Line:
+                rectangle: self.x, self.y, self.width, self.height
+        cols: 2
+        size_hint: 1, 0.1
+        padding: 30, 0
+        BoxLayout:
+            orientation: 'horizontal'
+            ItemLabel:
+                text: 'Вес:'
+            ItemLabel:
+                id: weight
+                text: '0'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            ItemLabel:
+                text: 'Оси'
+
+            ItemLabel:
+                id: axes
+                text: '0'
+
+    GridLayout:
+        canvas:
+            Color:
+                rgb: 68/255.0, 164/255.0, 201/255.0
+            Line:
+                rectangle: self.x, self.y, self.width, self.height
+        rows:2
+        size_hint: 1, 0.2
+        BoxLayout:
+            orientation: 'horizontal'
+            padding: [30, 0, 0, 0]
+            ItemLabel:
+                size_hint: 0.7, 1
+                text: 'Требуемое тормозное нажатие:'
+
+            ItemLabel:
+                id: pressresult
+                size_hint: 0.3, 1
+                text: '0'
+
+
+        BoxLayout:
+            canvas:
+                Color:
+                    rgb: 68/255.0, 164/255.0, 201/255.0
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+            orientation: 'horizontal'
+            padding: [30, 0, 0, 0]
+
+            ItemLabel:
+                size_hint: 0.6, 1
+                text: 'Требуется ручных тормозов:'
+
+            ItemLabel:
+                size_hint: 0.4, 1
+                id: parking_axes
+                text: '0'
+
+
+
+    GridLayout:
+        canvas:
+            Color:
+                rgb: 68/255.0, 164/255.0, 201/255.0
+            Line:
+                rectangle: self.x, self.y, self.width, self.height
+        cols:3
+        BoxLayout:
+            canvas:
+                Color:
+                    rgb: 68/255.0, 164/255.0, 201/255.0
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+            orientation: 'vertical'
+            padding: [30, 0, 10, 0]
+
+            ItemLabel:
+                text:'Нажатие т/с'
+            ItemLabel:
+                text:'3.5'
+            ItemLabel:
+                text:'4.5'
+            ItemLabel:
+                text:'5.0'
+            ItemLabel:
+                text:'5.5'
+            ItemLabel:
+                text:'6.0'
+            ItemLabel:
+                text:'6.5'
+            ItemLabel:
+                text:'7.0'
+            ItemLabel:
+                text:'7.5'
+            ItemLabel:
+                text:'8.0'
+            ItemLabel:
+                text:'8.5'
+            ItemLabel:
+                text:'9.0'
+            ItemLabel:
+                text:'10'
+            ItemLabel:
+                text:'11'
+            ItemLabel:
+                text:'11'
+            ItemLabel:
+                text:'12'
+            ItemLabel:
+                text:'13'
+            ItemLabel:
+                text:'Итого'
+
+        BoxLayout:
+            canvas:
+                Color:
+                    rgb: 68/255.0, 164/255.0, 201/255.0
+                Line:
+                    rectangle: self.x, self.y, self.width, self.height
+            orientation: 'vertical'
+            padding: [30, 0, 20, 0]
+
+            ItemLabel:
+                text:'Кол-во осей'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+
+        BoxLayout:
+            orientation: 'vertical'
+            padding: [30, 0, 20, 0]
+
+            ItemLabel:
+                text:'Факт. нажатие'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+            ItemLabel:
+                text:'0'
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint: 0.4, 0.1
+        padding: [30, 10, 30, 10]
+        Button:
+            text: 'Ввод'
+            font_size: 20
+            on_release:
+                #root.enter_data()
+                root.manager.current = root.manager.next()
+        Button:
+            text: 'Расчёт'
+            font_size: 20
+            on_press:
+                root.check()
+
+        Button:
+            text: 'История'
+            font_size: 20

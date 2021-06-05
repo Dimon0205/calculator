@@ -71,7 +71,7 @@ with open(filname, 'w', encoding="utf-8") as out:
     json.dump(
 
         [
-            ['Вес поезда:', weight],
+            ['Вес поезда:', math.ceil(weight)],
             ['Количество осей:', axes],
             ['Требуе мое нажатие:', math.ceil(pressresult), press_coef_hint],
             ['Требуется ручных тормозных осей:', parking_axes],
