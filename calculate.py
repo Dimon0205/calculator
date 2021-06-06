@@ -26,38 +26,36 @@ def get_calculate(w):
     # if parking_axes % 4:
     #     parking_axes += 4 - parking_axes % 4
     # parking_axes_str = str(parking_axes)
-    weight = Container.check.__getattribute__('weight')
-    return {'parking_axes': parking_axes, 'weight': weight}
+
+    return {'parking_axes': parking_axes}
 
 
-class CalcScreen(Screen):
-    def __init__(self, weight, text_input, **kwargs):
+
+
+class CalcScreen(GridLayout, Screen):
+    def __init__(self, weight, **kwargs):
         super().__init__(**kwargs)
         self.weight = weight
-        self.text_input.text = text_input
 
     def data_input(self):
         self.weight = int(self.text_input.text)
-        return self.weight
-
-
-class Container(GridLayout, CalcScreen):
-    def __init__(self, weight, text_input, **kwargs):
-        super().__init__(weight, text_input, **kwargs)
-        self.weight = weight
-        self.text_input.text = text_input
-
-    def check(self):
         try:
-            self.weight = CalcScreen.data_input(self)
+            self.weight == type(int)
         except:
             self.weight = 0
+
+
+class Container(GridLayout, Screen):
+    def __init__(self, weight, **kwargs):
+        super(Container, self).__init__(**kwargs)
+        self.wight = weight
+
+    def check(self):
         calculate = get_calculate(self.weight)
         self.parking_axes.text = calculate.get('parking_axes')
-        self.weight = calculate.get('weight')
 
 
-class MyApp(App):
+class CalculateApp(App):
 
     def build(self):
         sm = ScreenManager()
@@ -68,4 +66,4 @@ class MyApp(App):
 
 
 if __name__ == '__main__':
-    MyApp().run()
+    CalculateApp().run()
