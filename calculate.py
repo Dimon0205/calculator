@@ -30,12 +30,7 @@ def get_calculate(w):
     return {'parking_axes': parking_axes}
 
 
-
-
 class CalcScreen(GridLayout, Screen):
-    def __init__(self, weight, **kwargs):
-        super().__init__(**kwargs)
-        self.weight = weight
 
     def data_input(self):
         self.weight = int(self.text_input.text)
@@ -43,16 +38,14 @@ class CalcScreen(GridLayout, Screen):
             self.weight == type(int)
         except:
             self.weight = 0
-
+        return CalcScreen.data_input(self)
 
 class Container(GridLayout, Screen):
-    def __init__(self, weight, **kwargs):
-        super(Container, self).__init__(**kwargs)
-        self.wight = weight
 
-    def check(self):
+    def data_output(self):
         calculate = get_calculate(self.weight)
         self.parking_axes.text = calculate.get('parking_axes')
+
 
 
 class CalculateApp(App):
